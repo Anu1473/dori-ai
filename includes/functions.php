@@ -30,9 +30,9 @@ function getSectionContent($pageSlug, $sectionName) {
 }
 
 /**
- * Get section items by page slug and section name
+ * Get section items by section ID
  */
-function getSectionItems($pageSlug, $sectionName) {
+function getSectionItemsByPageAndSection($pageSlug, $sectionName) {
     global $pdo;
     
     $stmt = $pdo->prepare("
@@ -43,6 +43,23 @@ function getSectionItems($pageSlug, $sectionName) {
         ORDER BY si.order_num ASC
     ");
     $stmt->execute([$pageSlug, $sectionName]);
+    
+    return $stmt->fetchAll();
+}
+
+/**
+ * Get all sections for a page
+ */
+function getAllPageSections($pageSlug) {
+    global $pdo;
+    
+    $stmt = $pdo->prepare("
+        SELECT s.* FROM sections s
+        JOIN pages p ON s.page_id = p.id
+        WHERE p.slug = ?
+        ORDER BY s.order_num ASC
+    ");
+    $stmt->execute([$pageSlug]);
     
     return $stmt->fetchAll();
 }
@@ -87,11 +104,10 @@ function getCaseStudies($limit = 3) {
 function getPartners() {
     global $pdo;
     
-    $stmt = $pdo->prepare("
+    $stmt = $pdo->query("
         SELECT * FROM partners
         ORDER BY order_num ASC
     ");
-    $stmt->execute();
     
     return $stmt->fetchAll();
 }
@@ -158,7 +174,5 @@ function createSlug($string) {
     $string = strtolower(trim($string));
     $string = preg_replace('/[^a-z0-9-]/', '-', $string);
     $string = preg_replace('/-+/', '-', $string);
-    $string = trim($string, '-');
-    
-    return $string;
+    return trim($string, '-');
 }

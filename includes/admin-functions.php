@@ -8,7 +8,6 @@ function getAllPages() {
     global $pdo;
     
     $stmt = $pdo->query("SELECT * FROM pages ORDER BY title ASC");
-    
     return $stmt->fetchAll();
 }
 
@@ -20,7 +19,6 @@ function getPageById($pageId) {
     
     $stmt = $pdo->prepare("SELECT * FROM pages WHERE id = ?");
     $stmt->execute([$pageId]);
-    
     return $stmt->fetch();
 }
 
@@ -43,10 +41,12 @@ function addPage($pageData) {
             $pageData['content']
         ]);
         
-        // Log activity
-        logActivity('create', 'page', $pdo->lastInsertId(), $pageData['title']);
+        $pageId = $pdo->lastInsertId();
         
-        return true;
+        // Log activity
+        logActivity('create', 'page', $pageId, $pageData['title']);
+        
+        return $pageId;
     } catch (PDOException $e) {
         return false;
     }
@@ -120,13 +120,13 @@ function slugExists($slug) {
 }
 
 /**
- * Get all sections
+ * Get all sections with page information
  */
 function getAllSections() {
     global $pdo;
     
     $stmt = $pdo->query("
-        SELECT s.*, p.title as page_title
+        SELECT s.*, p.title as page_title, p.slug as page_slug
         FROM sections s
         JOIN pages p ON s.page_id = p.id
         ORDER BY p.title ASC, s.order_num ASC
@@ -136,13 +136,13 @@ function getAllSections() {
 }
 
 /**
- * Get sections by page ID
+ * Get sections by page ID with full information
  */
 function getSectionsByPageId($pageId) {
     global $pdo;
     
     $stmt = $pdo->prepare("
-        SELECT s.*, p.title as page_title
+        SELECT s.*, p.title as page_title, p.slug as page_slug
         FROM sections s
         JOIN pages p ON s.page_id = p.id
         WHERE s.page_id = ?
@@ -154,13 +154,13 @@ function getSectionsByPageId($pageId) {
 }
 
 /**
- * Get section by ID
+ * Get section by ID with full information
  */
 function getSectionById($sectionId) {
     global $pdo;
     
     $stmt = $pdo->prepare("
-        SELECT s.*, p.title as page_title
+        SELECT s.*, p.title as page_title, p.slug as page_slug
         FROM sections s
         JOIN pages p ON s.page_id = p.id
         WHERE s.id = ?
@@ -194,10 +194,12 @@ function addSection($sectionData) {
             $sectionData['order_num'] ?? 0
         ]);
         
-        // Log activity
-        logActivity('create', 'section', $pdo->lastInsertId(), $sectionData['section_name']);
+        $sectionId = $pdo->lastInsertId();
         
-        return true;
+        // Log activity
+        logActivity('create', 'section', $sectionId, $sectionData['section_name']);
+        
+        return $sectionId;
     } catch (PDOException $e) {
         return false;
     }
@@ -264,13 +266,98 @@ function deleteSection($sectionId) {
 }
 
 /**
+ * Get section items by section ID
+ */
+function getSectionItems($sectionId) {
+    global $pdo;
+    
+    $stmt = $pdo->prepare("
+        SELECT * FROM section_items 
+        WHERE section_id = ? 
+        ORDER BY order_num ASC
+    ");
+    $stmt->execute([$sectionId]);
+    
+    return $stmt->fetchAll();
+}
+
+/**
+ * Add section item
+ */
+function addSectionItem($itemData) {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO section_items 
+            (section_id, title, description, image_path, icon, link, order_num)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ");
+        
+        $stmt->execute([
+            $itemData['section_id'],
+            $itemData['title'],
+            $itemData['description'] ?? null,
+            $itemData['image_path'] ?? null,
+            $itemData['icon'] ?? null,
+            $itemData['link'] ?? null,
+            $itemData['order_num'] ?? 0
+        ]);
+        
+        return $pdo->lastInsertId();
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+/**
+ * Update section item
+ */
+function updateSectionItem($itemId, $itemData) {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("
+            UPDATE section_items
+            SET title = ?, description = ?, image_path = ?, icon = ?, link = ?, order_num = ?
+            WHERE id = ?
+        ");
+        
+        return $stmt->execute([
+            $itemData['title'],
+            $itemData['description'] ?? null,
+            $itemData['image_path'] ?? null,
+            $itemData['icon'] ?? null,
+            $itemData['link'] ?? null,
+            $itemData['order_num'] ?? 0,
+            $itemId
+        ]);
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+/**
+ * Delete section item
+ */
+function deleteSectionItem($itemId) {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("DELETE FROM section_items WHERE id = ?");
+        return $stmt->execute([$itemId]);
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+/**
  * Get total count of a table
  */
 function getTotalCount($table) {
     global $pdo;
     
     $stmt = $pdo->query("SELECT COUNT(*) FROM {$table}");
-    
     return $stmt->fetchColumn();
 }
 
@@ -417,136 +504,11 @@ function uploadFile($file) {
 }
 
 /**
- * Get all menu items
+ * Create a clean URL slug
  */
-function getAllMenuItems() {
-    global $pdo;
-    
-    $stmt = $pdo->query("
-        SELECT m.*, p.title as page_title 
-        FROM menu_items m
-        LEFT JOIN pages p ON m.page_id = p.id
-        ORDER BY m.parent_id, m.order_num
-    ");
-    
-    return $stmt->fetchAll();
-}
-
-/**
- * Get menu item by ID
- */
-function getMenuItemById($id) {
-    global $pdo;
-    
-    $stmt = $pdo->prepare("
-        SELECT m.*, p.title as page_title 
-        FROM menu_items m
-        LEFT JOIN pages p ON m.page_id = p.id
-        WHERE m.id = ?
-    ");
-    $stmt->execute([$id]);
-    
-    return $stmt->fetch();
-}
-
-/**
- * Add menu item
- */
-function addMenuItem($data) {
-    global $pdo;
-    
-    try {
-        $stmt = $pdo->prepare("
-            INSERT INTO menu_items (title, url, page_id, parent_id, order_num)
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        
-        $stmt->execute([
-            $data['title'],
-            $data['url'] ?? null,
-            $data['page_id'] ?? null,
-            $data['parent_id'] ?? null,
-            $data['order_num'] ?? 0
-        ]);
-        
-        return $pdo->lastInsertId();
-    } catch (PDOException $e) {
-        return false;
-    }
-}
-
-/**
- * Update menu item
- */
-function updateMenuItem($id, $data) {
-    global $pdo;
-    
-    try {
-        $stmt = $pdo->prepare("
-            UPDATE menu_items 
-            SET title = ?, url = ?, page_id = ?, parent_id = ?, order_num = ?
-            WHERE id = ?
-        ");
-        
-        return $stmt->execute([
-            $data['title'],
-            $data['url'] ?? null,
-            $data['page_id'] ?? null,
-            $data['parent_id'] ?? null,
-            $data['order_num'] ?? 0,
-            $id
-        ]);
-    } catch (PDOException $e) {
-        return false;
-    }
-}
-
-/**
- * Delete menu item
- */
-function deleteMenuItem($id) {
-    global $pdo;
-    
-    try {
-        // First update any child items to have no parent
-        $stmt = $pdo->prepare("
-            UPDATE menu_items 
-            SET parent_id = NULL 
-            WHERE parent_id = ?
-        ");
-        $stmt->execute([$id]);
-        
-        // Then delete the menu item
-        $stmt = $pdo->prepare("DELETE FROM menu_items WHERE id = ?");
-        return $stmt->execute([$id]);
-    } catch (PDOException $e) {
-        return false;
-    }
-}
-
-/**
- * Build menu hierarchy
- */
-function buildMenuHierarchy($items, $parentId = null) {
-    $branch = [];
-    
-    foreach ($items as $item) {
-        if ($item['parent_id'] == $parentId) {
-            $children = buildMenuHierarchy($items, $item['id']);
-            if ($children) {
-                $item['children'] = $children;
-            }
-            $branch[] = $item;
-        }
-    }
-    
-    return $branch;
-}
-
-/**
- * Get frontend menu
- */
-function getFrontendMenu() {
-    $items = getAllMenuItems();
-    return buildMenuHierarchy($items);
+function createSlug($string) {
+    $string = strtolower(trim($string));
+    $string = preg_replace('/[^a-z0-9-]/', '-', $string);
+    $string = preg_replace('/-+/', '-', $string);
+    return trim($string, '-');
 }
