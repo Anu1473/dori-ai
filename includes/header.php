@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo SITE_URL?>assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo SITE_URL?>/assets/css/style.css">
 </head>
 <body>
     <header class="site-header">
@@ -33,44 +33,44 @@
                 <nav class="main-nav">
                     <ul class="nav-list">
                         <li class="nav-item has-dropdown">
-                            <a href="<?php echo SITE_URL?>/platforms.php" class="nav-link">Platform</a>
+                            <a href="/platform" class="nav-link">Platform</a>
                             <div class="dropdown-menu">
                                 <ul>
-                                    <li><a href="<?php echo SITE_URL?>/platforms.php#visual-intelligence">Visual Intelligence</a></li>
-                                    <li><a href="<?php echo SITE_URL?>/platforms.php#ai-applications">AI Applications</a></li>
-                                    <li><a href="<?php echo SITE_URL?>/platforms.php#data-driven">Data-Driven Development</a></li>
+                                    <li><a href="/platform#visual-intelligence">Visual Intelligence</a></li>
+                                    <li><a href="/platform#ai-applications">AI Applications</a></li>
+                                    <li><a href="/platform#data-driven">Data-Driven Development</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item has-dropdown">
-                            <a href="<?php echo SITE_URL?>/solutions.php" class="nav-link">Solutions</a>
+                            <a href="/solutions" class="nav-link">Solutions</a>
                             <div class="dropdown-menu">
                                 <ul>
-                                    <li><a href="<?php echo SITE_URL?>/solutions.php#quality-control">Quality Control</a></li>
-                                    <li><a href="<?php echo SITE_URL?>/solutions.php#process-monitoring">Process Monitoring</a></li>
-                                    <li><a href="<?php echo SITE_URL?>/solutions.php#site-visibility">Site Visibility</a></li>
+                                    <li><a href="/solutions#quality-control">Quality Control</a></li>
+                                    <li><a href="/solutions#process-monitoring">Process Monitoring</a></li>
+                                    <li><a href="/solutions#site-visibility">Site Visibility</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item has-dropdown">
-                            <a href="#" class="nav-link">Industries</a>
+                            <a href="/industries" class="nav-link">Industries</a>
                             <div class="dropdown-menu">
                                 <ul>
-                                    <li><a href="#">Manufacturing</a></li>
-                                    <li><a href="#">Automotive</a></li>
-                                    <li><a href="#">Electronics</a></li>
-                                    <li><a href="#">Food & Beverage</a></li>
+                                    <li><a href="/industries/manufacturing">Manufacturing</a></li>
+                                    <li><a href="/industries/automotive">Automotive</a></li>
+                                    <li><a href="/industries/electronics">Electronics</a></li>
+                                    <li><a href="/industries/food-beverage">Food & Beverage</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item has-dropdown">
-                            <a href="#" class="nav-link">Resources</a>
+                            <a href="/resources" class="nav-link">Resources</a>
                             <div class="dropdown-menu">
                                 <ul>
-                                    <li><a href="#">Case Studies</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Documentation</a></li>
-                                    <li><a href="#">Support</a></li>
+                                    <li><a href="/case-studies">Case Studies</a></li>
+                                    <li><a href="/blog">Blog</a></li>
+                                    <li><a href="/documentation">Documentation</a></li>
+                                    <li><a href="/support">Support</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -78,7 +78,7 @@
                 </nav>
                 
                 <div class="header-actions">
-                    <a href="#" class="btn btn-primary">BOOK A DEMO</a>
+                    <a href="/demo" class="btn btn-primary">BOOK A DEMO</a>
                     <button class="mobile-menu-toggle">
                         <span></span>
                         <span></span>
@@ -92,7 +92,7 @@
     <div class="mobile-menu">
         <div class="mobile-menu-header">
             <div class="logo">
-                <a href="<?php echo SITE_URL?>/">
+                <a href="/">
                     <img src="<?php echo SITE_URL?>/assets/images/logo.svg" alt="Dori Logo">
                 </a>
             </div>
@@ -106,42 +106,42 @@
                 <li class="mobile-nav-item">
                     <a href="#" class="mobile-nav-link mobile-dropdown-toggle">Platform</a>
                     <ul class="mobile-dropdown">
-                        <li><a href="<?php echo SITE_URL?>/platforms.php#visual-intelligence">Visual Intelligence</a></li>
-                        <li><a href="<?php echo SITE_URL?>/platforms.php#ai-applications">AI Applications</a></li>
-                        <li><a href="<?php echo SITE_URL?>/platforms.php#data-driven">Data-Driven Development</a></li>
+                        <li><a href="/platform#visual-intelligence">Visual Intelligence</a></li>
+                        <li><a href="/platform#ai-applications">AI Applications</a></li>
+                        <li><a href="/platform#data-driven">Data-Driven Development</a></li>
                     </ul>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="#" class="mobile-nav-link mobile-dropdown-toggle">Solutions</a>
                     <ul class="mobile-dropdown">
-                        <li><a href="<?php echo SITE_URL?>/solutions.php#quality-control">Quality Control</a></li>
-                        <li><a href="<?php echo SITE_URL?>/solutions.php#process-monitoring">Process Monitoring</a></li>
-                        <li><a href="<?php echo SITE_URL?>/solutions.php#site-visibility">Site Visibility</a></li>
+                        <li><a href="/solutions#quality-control">Quality Control</a></li>
+                        <li><a href="/solutions#process-monitoring">Process Monitoring</a></li>
+                        <li><a href="/solutions#site-visibility">Site Visibility</a></li>
                     </ul>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="#" class="mobile-nav-link mobile-dropdown-toggle">Industries</a>
                     <ul class="mobile-dropdown">
-                        <li><a href="#">Manufacturing</a></li>
-                        <li><a href="#">Automotive</a></li>
-                        <li><a href="#">Electronics</a></li>
-                        <li><a href="#">Food & Beverage</a></li>
+                        <li><a href="/industries/manufacturing">Manufacturing</a></li>
+                        <li><a href="/industries/automotive">Automotive</a></li>
+                        <li><a href="/industries/electronics">Electronics</a></li>
+                        <li><a href="/industries/food-beverage">Food & Beverage</a></li>
                     </ul>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="#" class="mobile-nav-link mobile-dropdown-toggle">Resources</a>
                     <ul class="mobile-dropdown">
-                        <li><a href="#">Case Studies</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Support</a></li>
+                        <li><a href="/case-studies">Case Studies</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                        <li><a href="/documentation">Documentation</a></li>
+                        <li><a href="/support">Support</a></li>
                     </ul>
                 </li>
             </ul>
         </nav>
         
         <div class="mobile-actions">
-            <a href="#" class="btn btn-primary btn-block">BOOK A DEMO</a>
+            <a href="/demo" class="btn btn-primary btn-block">BOOK A DEMO</a>
         </div>
     </div>
     
